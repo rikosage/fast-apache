@@ -55,7 +55,7 @@
 
 ####  7.2. Развертывание проекта из удаленного репозитория ####
 
-*fast-apache -u --repo \<sitename\> \<repository\>*
+*fast-apache -u --rep \<sitename\> \<repository\>*
 
 Клонирует удаленный репозиторий \<repository\> в директорию проекта \<sitename\>.
 

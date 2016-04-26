@@ -43,7 +43,7 @@ if [[ $USER == 'root' ]]; then
         #Если пришел ключ -f: Определяем,откуда пользователь собирается разворачивать сайт
     u)  case $OPTARG in
             #Если через git
-            --repo) deployWithGit $3 $4
+            --rep) deployWithGit $3 $4
                     ;;
             #Если не указано,врубаем композер
             * | "") deployWithComposer $2
