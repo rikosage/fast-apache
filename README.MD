@@ -55,13 +55,13 @@ sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf
 
 7.2 Развертывание проекта из удаленного репозитория
 
-*fast-apache -u --repo <sitename> <repository>*
+*fast-apache -u --repo \<sitename\> \<repository\>*
 
 Клонирует удаленный репозиторий <repository> в директорию проекта <sitename>.
 
 8. Молниеносная развертка
 
-*fast-apache -g \[*sitename*\] \[*repository*\]
+*fast-apache -g \<sitename\> \<repository\>*
 
 Последовательно создает новый локальный хост <sitename> и клонирует удаленный репозиторий <repository>.
 
