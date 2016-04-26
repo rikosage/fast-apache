@@ -71,7 +71,7 @@
 	В директории Apache2 должен находиться файл your_template.conf
 	В самом файле переменная оформляется так: \<\!your_template\!\>
 
-В config.sh значение переменной DOMAIN должно соответствовать строке из файла your_template.conf : ServerName ar-conf_ru\[.dev\], где .dev - значение переменной DOMAIN.
+В config.sh значение переменной DOMAIN должно соответствовать строке из файла your_template.conf : ServerName your_template\<domain\>, где \<domain\> - значение переменной DOMAIN.
 В config.sh значение переменной IP должно соответствовать вашим стандартным ip-адресам для локальных хостов.
 
 
