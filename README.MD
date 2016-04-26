@@ -8,7 +8,7 @@
 Для корректной работы строго рекомендуется копировать файл template.conf в папку /etc/apache2/sites-available/template.conf
 Для большего удобства рекомендуется создать alias для запуска скрипта от sudo. 
 
-#sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf#
+sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf
 
 1. Создание хоста. 
 
