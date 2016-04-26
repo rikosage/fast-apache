@@ -4,6 +4,7 @@ source $(dirname $0)/res/help-screen.sh
 
 #Функция для установки необходимых пакетов
 function installPackage(){
+    # Если требуется установить Composer
     if [[ $1 == "composer" ]]; then
         echo -e "\033[32;1;31mComposer is not installed!\n \033[0m"
         read -n 2 -p "Do you want install Composer now? (y/[a]):" AMSURE
@@ -11,47 +12,40 @@ function installPackage(){
             curl -sS https://getcomposer.org/installer | php
             mv composer.phar /usr/local/bin/composer
             sudo -u $USERNAME composer global require "fxp/composer-asset-plugin:*"
-            #Предупредим пользователя
             echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
-            #И выгоним из скрипта.
             exit 1;
         fi
 
         echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
     fi
+    # Если требуется установить xclip
     if [[ $1 == "xclip" ]]; then
-        #Предупредим пользователя
         echo -e "\033[32;1;31mXclip is not installed!\n \033[0m"
-        #И спросим, не установить ли пакет прямо сейчас
         read -n 2 -p "Do you want install xclip now?? (y/[a]):" AMSURE
-        # Если да
         if [ "$AMSURE" = "y" ]; then
-            #Установим
             apt-get install xclip
-            #Предупредим пользователя
             echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
-            #И выгоним из скрипта.
             exit 1;
         fi
     fi
+    # Если требуется установить Git
     if [[ $1 == "git" ]]; then
         echo -e "\033[32;1;31mGit is not installed!\n \033[0m"
         read -n 2 -p "Do you want install Git now? (y/[a]):" AMSURE
         if [ "$AMSURE" = "y" ]; then
             apt-get install git
-            #Предупредим пользователя
             echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
-            #И выгоним из скрипта.
             exit 1;
         fi
     fi
 }
+
 #Функция проверяет допустимость аргумента.
 function checkargs () {
     # Если аргумент начинается с минуса - значит это ключ, это ошибка.
     if [[ $OPTARG =~ ^-+.*$ ]]
     then
-        echo "Unknow argument $OPTARG for option $opt!"
+         echo -e "\033[32;1;31mUnknow argument $OPTARG for option $opt!\033[0m"
         exit 1
     fi
 }
@@ -92,7 +86,7 @@ function regLocalSite(){
                         #Создаем папку от имени текущего юзера
                         sudo -u $USERNAME mkdir $SERVER_DIR/$sitename 2>/dev/null
                         # Активируем новый хост
-                        a2ensite $1
+                        a2ensite $sitename
                         # Перезапускаем апач.
                         apacheRestart
                         echo -e "\033[32;1;32m"$sitename": Site succesfully created!\033[0m"
@@ -149,9 +143,8 @@ function removeLocalSite(){
                     fi
 
                 fi
-    	    #Перезагружаем апач
+    	        #Перезагружаем апач
                 apacheRestart
-
     	    #Уведомляем
             if [[ $all != "" ]]; then
                 echo -e "\033[32;1;32mSite succesfully disabled and deleted. Your project folder has been deleted too.\033[0m"
