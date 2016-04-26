@@ -61,7 +61,7 @@ sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf
 
 8. Молниеносная развертка
 
-*fast-apache -g \[sitename\] \[repository\]
+*fast-apache -g \[*sitename*\] \[*repository*\]
 
 Последовательно создает новый локальный хост <sitename> и клонирует удаленный репозиторий <repository>.
 
