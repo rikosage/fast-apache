@@ -8,60 +8,60 @@
 Для корректной работы строго рекомендуется копировать файл template.conf в папку /etc/apache2/sites-available/template.conf
 Для большего удобства рекомендуется создать alias для запуска скрипта от sudo. 
 
-#sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf#
+sudo cp fast-apache/template.conf /etc/apache2/sites-available/template.conf
 
 1. Создание хоста. 
 
-fast-apache -n <sitename>
+*fast-apache -n <sitename>*
 
 Создает новый локальный хост с указанным именем и доменом. При стандартных настройках, после выполнения команды будет доступен адрес http://<sitename>.dev
 
 2. Удаление хоста.
 
-fast-apache -d [-a | --all] <sitename>
+*fast-apache -d [-a | --all] <sitename>*
 
 Удаляет локальный хост. При опции -a | --all удаляет так же папку с проектом.
 
 3. Открытие конфигурации хоста
 
-fast-apache -c <sitename>
+*fast-apache -c <sitename>*
 
 Открывает файл <sitename>.conf в директории Apache2 (по умолчанию: /etc/apache2/sites-available/<sitename>.conf).
 
 4. Перезагрузка
 
-fast-apache -r
+*fast-apache -r*
 
 Перезагружает Apache2
 
 5. Список
 
-fast-apache -l
+*fast-apache -l*
 
 Открывает список сайтов. (Возможно, будет показывать только те, которые созданы этим скриптом).
 
 6. Помощь
 
-fast-apache [-h]
+*fast-apache [-h]*
 
 Показывает экран помощи (то же действие случится, если запустить скрипт без параметров).
 
 7. Развертывание
 7.1 Развертывание Yii2 (basic шаблона) на существующий хост.
 
-fast-apache -u <sitename>
+*fast-apache -u <sitename>*
 
 Скачивает фреймворк в директорию проекта <sitename> с помощью composer. 
 
 7.2 Развертывание проекта из удаленного репозитория
 
-fast-apache -u --repo <sitename> <repository>
+*fast-apache -u --repo <sitename> <repository>*
 
 Клонирует удаленный репозиторий <repository> в директорию проекта <sitename>.
 
 8. Молниеносная развертка
 
-fast-apache -g <sitename> <repository>
+*fast-apache -g *\[sitename\]* *repository*
 
 Последовательно создает новый локальный хост <sitename> и клонирует удаленный репозиторий <repository>.
 
