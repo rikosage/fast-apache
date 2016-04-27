@@ -12,3 +12,5 @@ SERVER_DIR=/home/$USERNAME/server
 DOMAIN='.dev'
 #Любой локальный адрес
 IP='127.0.0.3'
+#Любимый текстовый редактор
+FAVORITE_EDITOR=vim

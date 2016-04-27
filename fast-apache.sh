@@ -3,7 +3,6 @@
 
 # Для функций деплоя Composer устанавливается глобально
 
-
 source $(dirname $0)/res/core.sh
 
 #Если список аргументов пуст
@@ -72,5 +71,5 @@ if [[ $USER == 'root' ]]; then
     esac
     done
 else
-    echo -e '\033[32;1;31mScript needs superuser rights! Cancelled.\033[0m'
+    dangerMessage "Script needs superuser rights! Cancelled."
 fi

@@ -1,41 +1,50 @@
 source $(dirname $0)/config.sh
 source $(dirname $0)/res/help-screen.sh
+source $(dirname $0)/res/echos.sh
 
 
 #Функция для установки необходимых пакетов
 function installPackage(){
     # Если требуется установить Composer
     if [[ $1 == "composer" ]]; then
-        echo -e "\033[32;1;31mComposer is not installed!\n \033[0m"
+        dangerMessage "Composer is not installed!"
         read -n 2 -p "Do you want install Composer now? (y/[a]):" AMSURE
         if [ "$AMSURE" = "y" ]; then
             curl -sS https://getcomposer.org/installer | php
             mv composer.phar /usr/local/bin/composer
             sudo -u $USERNAME composer global require "fxp/composer-asset-plugin:*"
-            echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
+            successMessage "Success! Run the script again."
             exit 1;
+        else
+            dangerMessage "Cancelled"
+            exit 1
         fi
-
-        echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
     fi
+
     # Если требуется установить xclip
     if [[ $1 == "xclip" ]]; then
-        echo -e "\033[32;1;31mXclip is not installed!\n \033[0m"
+        dangerMessage "Xclip is not installed!"
         read -n 2 -p "Do you want install xclip now?? (y/[a]):" AMSURE
         if [ "$AMSURE" = "y" ]; then
             apt-get install xclip
-            echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
+            successMessage "Success! Run the script again."
             exit 1;
+        else
+            dangerMessage "Cancelled"
+            exit 1
         fi
     fi
     # Если требуется установить Git
     if [[ $1 == "git" ]]; then
-        echo -e "\033[32;1;31mGit is not installed!\n \033[0m"
+        dangerMessage "Git is not installed!"
         read -n 2 -p "Do you want install Git now? (y/[a]):" AMSURE
         if [ "$AMSURE" = "y" ]; then
             apt-get install git
-            echo -e "\033[32;1;32mSuccess! Run the script again.\033[0m"
+            successMessage "Success! Run the script again."
             exit 1;
+        else
+            dangerMessage "Cancelled"
+            exit 1
         fi
     fi
 }
@@ -45,7 +54,7 @@ function checkargs () {
     # Если аргумент начинается с минуса - значит это ключ, это ошибка.
     if [[ $OPTARG =~ ^-+.*$ ]]
     then
-         echo -e "\033[32;1;31mUnknow argument $OPTARG for option $opt!\033[0m"
+        dangerMessage "Unknow argument $OPTARG for option $opt!"
         exit 1
     fi
 }
@@ -65,11 +74,12 @@ function regLocalSite(){
                 sitename=$1
                 #Если файл с таким названием уже существует
                 if [[ -f $DIR/$sitename.conf ]]; then
-                    echo -e "\033[32;1;31mSite already exists! \033[0m"
+                    dangerMessage "Site already exists!"
                 else
                     read -n 2 -p "Do you really want create new site: "$sitename"? (y/[a]):" AMSURE
                     #Если пользователь ответил Y
                     if [ "$AMSURE" = "y" ]; then
+                        warningMessage "Preparing for create host..."
                         # После слеша - файл образец настройки виртуального хоста,с которого обычно копипастишь.
                         cat $DIR/$SAMPLE.conf | xclip
                         # Создаем новый файл конфигурации
@@ -83,7 +93,7 @@ function regLocalSite(){
                         # Создаем каталог в указанной папке,в соответствии с указанным названием.
                         # Если каталог уже есть, ничего страшного, просто уведомим
                         if [ -d $SERVER_DIR/$sitename ]; then
-                            echo -e "\033[32;1;33mWarning! Folder for project already exists!. Host creating continue anyway...\033[0m"
+                            warningMessage "Warning! Folder for project already exists! Host creating continue anyway"
                         fi
                         #Создаем папку от имени текущего юзера
                         sudo -u $USERNAME mkdir $SERVER_DIR/$sitename 2>/dev/null
@@ -91,17 +101,17 @@ function regLocalSite(){
                         a2ensite $sitename
                         # Перезапускаем апач.
                         apacheRestart
-                        echo -e "\033[32;1;32m"$sitename": Site succesfully created!\033[0m"
+                        successMessage "$sitename: Site successfully created!"
                     else
-                        echo -e '\033[32;1;31mCancelled \033[0m'
+                        dangerMessage "Cancelled"
                     fi
                 fi
             # Если ничего не ввели в названии при запуске скрипта - выдаем ошибку
             else
-              echo -e "\033[33;41;30mERROR! Input a site name after last word! \033[0m"
+                dangerMessage "Sitename can not be blank!"
             fi
         else
-            echo -e "\033[33;41;30mERROR! File "$DIR/$SAMPLE".conf is not exists! \033[0m"
+            criticalMessage "ERROR! File "$DIR/$SAMPLE".conf is not exists!"
         fi
     #Если не установлен пакет xclip
     else
@@ -126,6 +136,7 @@ function removeLocalSite(){
     	#Если уверен в выборе (нажал "y")
             if [ "$AMSURE" = "y" ]; then
     	    #Выключаем сайт
+                warningMessage "Preparing for remove host..."
                 a2dissite $sitename
 
     	    #Удаляем конфиг
@@ -141,7 +152,7 @@ function removeLocalSite(){
                         #Выпиливаем
                         rm -rf $SERVER_DIR/$sitename
                     else
-                        echo -e "\033[32;1;31m$sitename already deleted. \033[0m"
+                        warningMessage "$sitename project folder already deleted."
                     fi
 
                 fi
@@ -149,24 +160,23 @@ function removeLocalSite(){
                 apacheRestart
     	    #Уведомляем
             if [[ $all != "" ]]; then
-                echo -e "\033[32;1;32mSite succesfully disabled and deleted. Your project folder has been deleted too.\033[0m"
+                successMessage "Site $sitename succesfully disabled and deleted. Your project folder has been deleted too."
             else
-                echo -e "\033[32;1;32mSite succesfully disabled and deleted. You can delete project folder from your server.\033[0m"
+                successMessage "Site $sitename succesfully disabled and deleted. You can delete project folder from your server."
             fi
 
             else
     	    #Если пользователь ошибся - отменяем операцию
-                echo -e "\033[32;1;31mCancelled \033[0m"
+            dangerMessage "Cancelled"
             fi
         else
-    	#Если конфига не существует
-            echo -e "\033[32;1;31m"$sitename": Site not found \033[0m"
+    	    #Если конфига не существует
+            dangerMessage "$sitename: Site not found"
         fi
     else
         #Если прило пустое значение
-        echo -e "\033[33;41;30mERROR: Site name can't be empty! \033[0m"
+        criticalMessage "ERROR! Sitename can't be blank!"
     fi
-
 }
 
 #Скрипт открывает файл настроек введенного хоста.
@@ -179,17 +189,17 @@ function confLocalSite(){
         #И если файл с таким названием существует
         if [[ -f $FILE ]]; then
             #Уведомляем об успехе и открываем файл в редакторе
-            echo -e "\033[32;1;32mFile exists and ready to edit... \033[0m"
-            gedit /etc/apache2/sites-available/$sitename.conf
+            successMessage "Configuration file of $sitename exists and ready to edit..."
+            $FAVORITE_EDITOR /etc/apache2/sites-available/$sitename.conf
         #Если файла не существует
         else
             #Уведомляем об ошибке
-            echo -e "\033[32;1;31mFile $FILE not found! \033[0m"
+            dangerMessage "$FILE not found"
         fi
     #Если не было введено название
     else
         #Уведомляем об ошибке
-        echo -e "\033[32;1;31mSite name can not be empty! \033[0m"
+        criticalMessage "Sitename can not be blank!"
     fi
 }
 
@@ -201,15 +211,15 @@ function deployWithComposer(){
         if [[ $1 != "" ]]; then
             sitename=$1
             if [[ -f $DIR/$sitename.conf ]]; then
-                echo -e "\033[32;1;33mWait for composer init...\033[0m"
+                warningMessage "Wait for composer init..."
                 sudo -u $USERNAME composer create-project --prefer-dist yiisoft/yii2-app-basic $SERVER_DIR/$sitename
                 chmod -R 777 $SERVER_DIR/$sitename/runtime
                 chmod -R 777 $SERVER_DIR/$sitename/web/assets
             else
-                echo -e "\033[32;1;31m"$sitename": Site not found \033[0m"
+                dangerMessage "$sitename: Site not found"
             fi
         else
-            echo -e "\033[32;1;31mSite name can not be empty! \033[0m"
+            criticalMessage "Sitename can not be blank!"
         fi
     #Если composer не установлен
     else
@@ -232,14 +242,15 @@ function deployWithGit(){
                     sudo -u $USERNAME git clone $repository $SERVER_DIR/$sitename
                     chmod -R 777 $SERVER_DIR/$sitename/runtime
                     chmod -R 777 $SERVER_DIR/$sitename/web/assets
+                    successMessage "$sitename$DOMAIN successfully deployed into $SERVER_DIR/$sitename from $repository"
                 else
-                    echo -e "\033[32;1;31m"$sitename": Site not found \033[0m"
+                    dangerMessage "$sitename: Site not found"
                 fi
             else
-                echo -e "\033[32;1;31mRepository address can not be empty! \033[0m"
+                criticalMessage "Repository address can not be blank!"
             fi
         else
-            echo -e "\033[32;1;31mSite name can not be empty! \033[0m"
+            criticalMessage "Sitename can not be blank!"
         fi
     else
         installPackage git
@@ -247,6 +258,7 @@ function deployWithGit(){
 }
 
 function siteList(){
+
     echo -e "\n\033[32;1;37mActive Sites:\033[0m"
     RESULT=$(cat $HOSTS | awk -F "" ' /'127.0.0.3'\t/ {print} ')
     RESULT=$(echo $RESULT | sed -e "s/127.0.0.3/\n/g")
@@ -255,7 +267,7 @@ function siteList(){
 }
 
 function apacheRestart(){
-    echo -e "\033[32;1;33mPlease, wait for Apache2 restart...\033[0m"
+    warningMessage "Please, wait for Apache2 restart..."
     service apache2 restart;
-    echo -e "\033[32;1;32mApache2 successfully restarted!\033[0m"
+    successMessage "Apache2 successfully restarted!"
 }
