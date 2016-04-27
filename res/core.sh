@@ -75,7 +75,9 @@ function regLocalSite(){
                         # Создаем новый файл конфигурации
                         xclip -o > $DIR/$sitename.conf
                         # Заменяем название образца на введенное значение
-                        sed -i 's/<!'$SAMPLE'!>/'$sitename'/g' $DIR/$sitename.conf
+                        sed -i 's/<!template!>/'$sitename'/g' $DIR/$sitename.conf
+                        # Заменяем .юзера на текущего
+                        sed -i 's/<!username!>/'$USERNAME'/g' $DIR/$sitename.conf
                         # Добавляем строку в hosts.
                         sed -i -e '1 s/^/'$HOSTNAME'\n/;' $HOSTS
                         # Создаем каталог в указанной папке,в соответствии с указанным названием.
