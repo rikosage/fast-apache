@@ -3,7 +3,7 @@
 
 # Для функций деплоя Composer устанавливается глобально
 
-source $(dirname $0)/res/core.sh
+source $(realpath $(dirname $0))/res/core.sh
 
 #Если список аргументов пуст
 if [ -z $1 ]

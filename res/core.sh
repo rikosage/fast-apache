@@ -1,6 +1,6 @@
-source $(dirname $0)/config.sh
-source $(dirname $0)/res/help-screen.sh
-source $(dirname $0)/res/echos.sh
+source $(realpath $(dirname $0))/config.sh
+source $(realpath $(dirname $0))/res/help-screen.sh
+source $(realpath $(dirname $0))/res/echos.sh
 
 
 #Функция для установки необходимых пакетов
